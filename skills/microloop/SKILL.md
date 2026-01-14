@@ -1,6 +1,16 @@
 ---
 name: microloop
-description: GUI verification and UI debugging via observe/act/trace micro-loops. Use when tasks require seeing the screen, manipulating UI, validating visual results, or debugging UI flows. 当涉及"需要看到画面/调试界面/操作界面/GUI 验证"时使用。
+description: |
+  GUI 视觉验证工具。当 Claude 需要像人一样「真正看到屏幕画面」并「操作窗口」时使用。
+
+  自动触发场景：
+  - 用户说「看看界面」「截个图」「检查 UI」「验证显示效果」
+  - 开发 GUI 应用后需要验证实际渲染结果
+  - 调试 UI bug 需要看到真实画面
+  - 需要点击按钮、输入文本等窗口操作
+  - 需要截图作为证据
+
+  关键词：GUI、界面、UI、窗口、截图、看到、显示效果、点击、视觉验证
 hooks:
   PreToolUse:
     - matcher: "Bash"
@@ -16,13 +26,29 @@ hooks:
 
 # 微循环（Microloop）
 
-## 定位
-- microloop = **微循环**（记忆映射）
-- 只做 Observe / Act / Trace；规划与改代码仍在 Claude Code 完成。
+## 这是什么？
 
-## 触发条件
-- 需要看到画面 / 调试界面 / 操作 GUI / 验证 UI 行为时。
-- 若用户明确要求 loop/ralph/无人值守，改用 `microloop_loop`。
+让 Claude Code 获得「眼睛」和「手」：
+- **眼睛**：通过截图看到真实的屏幕/窗口画面
+- **手**：通过模拟点击、输入来操作 GUI
+
+## 什么时候用？
+
+当你需要 Claude 像人一样**真正看到并操作界面**时：
+- ✅ 开发了 GUI 功能，需要验证实际显示效果
+- ✅ UI 有 bug，需要看到真实画面来调试
+- ✅ 需要自动化操作某个窗口（点击、输入）
+- ✅ 需要截图作为证据
+
+**不需要用的场景**：
+- ❌ 只是读写代码文件
+- ❌ 运行命令行程序
+- ❌ 不涉及 GUI 的任务
+
+## 单步 vs Loop
+
+- **microloop（本 skill）**：每次一个动作，便于调试和观察
+- **microloop_loop**：配合 ralph-loop 插件，无人值守循环直到完成
 
 ## 核心流程（严格单步）
 1) Observe：截图 + trace

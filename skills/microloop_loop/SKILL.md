@@ -1,6 +1,16 @@
 ---
 name: microloop_loop
-description: Loop-mode microloop for unattended GUI verification. Use only when the user explicitly requests loop/ralph/unattended iteration. 用户明确要求 loop/ralph/无人值守时使用。
+description: |
+  GUI 视觉验证工具（循环模式）。配合 ralph-loop 插件实现无人值守的 GUI 验证循环。
+
+  触发条件：
+  - 用户明确说「loop」「ralph」「无人值守」「自动循环」
+  - 需要反复修改代码 → 验证 GUI → 继续修改，直到完美
+
+  工作模式：
+  - ralph-loop 负责循环回灌初始任务
+  - microloop_loop 负责 GUI 截图和操作
+  - 两者结合 = 自动化 GUI 验证修复循环
 hooks:
   PreToolUse:
     - matcher: "Bash"
@@ -107,18 +117,6 @@ python .claude/claude-microloop/driver/dev_driver.py type --text "hello" --windo
 ### 截图对比（Diff）
 ```bash
 python .claude/claude-microloop/driver/dev_driver.py diff --a "<prev.png>" --b "<curr.png>" --out "<diff.png>" --threshold 20
-```
-
-## Loop 状态管理（可选，hooks 已自动处理大部分）
-```bash
-# 初始化（如需手动）
-powershell -NoProfile -ExecutionPolicy Bypass -File .claude/claude-microloop/tools/microloop_loop_setup.ps1 "<PROMPT>" -MaxIterations 20 -CompletionPromise "DONE"
-
-# 状态文件位置
-.claude/microloop-loop.local.md
-
-# 取消循环
-powershell -NoProfile -ExecutionPolicy Bypass -File .claude/claude-microloop/tools/microloop_loop_cancel.ps1
 ```
 
 ## 异常分层

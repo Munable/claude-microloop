@@ -38,11 +38,7 @@ claude-microloop/
 │   ├── poc_microloop.py     # POC 演示
 │   └── README.md
 ├── tools/
-│   ├── microloop_loop_setup.ps1
-│   ├── microloop_loop_guard.ps1
-│   ├── microloop_loop_tick.ps1
-│   ├── microloop_loop_cancel.ps1
-│   └── microloop_loop_preflight.ps1
+│   └── microloop_loop_preflight.ps1  # 一键预检脚本
 └── traces/                  # 截图和日志（自动创建）
 ```
 
