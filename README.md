@@ -1,13 +1,22 @@
 # Claude Microloop
 
-GUI 验证和 UI 调试的微循环工具，专为 Claude Code 设计。
+GUI 验证和 UI 调试的微循环工具，专为 **Claude Code** 设计。
 
 ## 功能
 
 让 Claude Code 能够"看见"并"操作" GUI：
 - **Observe**: 截图获取屏幕/窗口状态
 - **Act**: 执行点击、输入等操作
-- **Trace**: 记录每步的证据（截图）
+- **Trace**: 自动记录每步的证据（通过 PostToolUse hook）
+
+## Claude Code 集成
+
+利用 Claude Code 的 **Skill-Scoped Hooks** 特性：
+- **PreToolUse Hook**: 执行 dev_driver 命令前自动验证环境（分辨率、窗口状态）
+- **PostToolUse Hook**: 执行后自动记录 trace 日志
+- **Stop Hook**: 智能判断 GUI 任务是否完成（仅 loop 模式）
+
+Hooks 只在 skill 激活时生效，结束后自动清理。
 
 ## 目录结构
 
@@ -39,9 +48,15 @@ claude-microloop/
 
 ## 安装
 
-1. 将此仓库放置在项目的 `.claude/claude-microloop` 目录下
-2. 确保安装了依赖：`pip install pywin32 Pillow`
-3. Claude Code 会自动识别 skills 目录中的 skill
+1. 克隆此仓库到项目的 `.claude/claude-microloop` 目录：
+   ```bash
+   git clone https://github.com/Munable/claude-microloop.git .claude/claude-microloop
+   ```
+2. 安装 Python 依赖：
+   ```bash
+   pip install pywin32 Pillow
+   ```
+3. Claude Code 会自动识别 `skills/` 目录中的 skill
 
 ## 使用
 

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Microloop PreToolUse Hook
+Microloop PreToolUse Hook (Claude Code)
 
 在执行 Bash 命令前检查是否涉及 dev_driver，
 如果是则验证环境状态（窗口焦点、分辨率等）。
 
-输入（stdin）: JSON 格式的工具调用信息
-输出（stdout）: JSON 格式的结果
-退出码: 0=允许, 2=阻止
+输入（stdin）: Claude Code hook JSON 格式
+输出（stdout）: JSON 格式的决策结果
+退出码: 0=成功（配合 JSON decision 字段）
 """
 
 import json
@@ -19,8 +19,7 @@ from pathlib import Path
 
 def get_project_root() -> Path:
     """获取项目根目录"""
-    if os.environ.get("CLAUDE_PROJECT_DIR"):
-        return Path(os.environ["CLAUDE_PROJECT_DIR"])
+    # Claude Code 通过 cwd 字段传递项目目录
     return Path.cwd()
 
 
@@ -73,29 +72,33 @@ def main():
     try:
         input_data = json.load(sys.stdin)
     except json.JSONDecodeError:
-        print(json.dumps({"status": "ok", "message": "no input to parse"}))
+        # 无输入时允许通过
         sys.exit(0)
 
     tool_input = input_data.get("tool_input", {})
     command = tool_input.get("command", "")
 
+    # 非 dev_driver 命令直接允许
     if not is_dev_driver_command(command):
-        print(json.dumps({"status": "ok", "message": "not a dev_driver command"}))
         sys.exit(0)
 
     project_root = get_project_root()
     passed, message = run_preflight_check(project_root)
 
     if passed:
-        print(json.dumps({"status": "ok", "message": message}))
+        # 允许执行
+        print(json.dumps({
+            "decision": "allow",
+            "permissionDecisionReason": message
+        }))
         sys.exit(0)
     else:
+        # 阻止执行，返回原因给 Claude
         print(json.dumps({
-            "status": "error",
-            "message": f"Preflight check failed: {message}",
-            "action": "blocked"
+            "decision": "deny",
+            "permissionDecisionReason": f"Preflight check failed: {message}"
         }))
-        sys.exit(2)
+        sys.exit(0)
 
 
 if __name__ == "__main__":

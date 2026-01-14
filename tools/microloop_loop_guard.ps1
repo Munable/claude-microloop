@@ -1,5 +1,5 @@
 param(
-    [string]$StatePath = ".codex\\microloop-loop.local.md"
+    [string]$StatePath = ".claude\\microloop-loop.local.md"
 )
 
 $ErrorActionPreference = "Stop"

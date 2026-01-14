@@ -16,11 +16,15 @@ hooks:
     - hooks:
         - type: prompt
           prompt: |
-            检查微循环任务是否完成。判断标准：
-            1. 用户指定的目标是否已达成
-            2. 是否输出了 <promise>DONE</promise> 标记
-            3. 是否已达到最大迭代次数
-            如果任务完成返回 {"ok": true}，否则返回 {"ok": false, "reason": "继续迭代"}
+            检查微循环 GUI 任务是否完成。
+
+            判断标准：
+            1. 用户指定的 GUI 验证目标是否已达成
+            2. 最后的截图是否显示了预期的 UI 状态
+            3. 是否输出了 <promise>DONE</promise> 标记
+
+            如果任务完成，返回 JSON: {"ok": true}
+            如果需要继续迭代，返回 JSON: {"ok": false, "reason": "描述还需要做什么"}
 ---
 
 # 微循环（Loop 版 / v2）

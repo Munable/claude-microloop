@@ -1,8 +1,11 @@
 """
-dev_driver/poc_microloop.py
+poc_microloop.py
 
 Minimal demo for the stateless driver: Observe -> Click -> Observe.
 The caller manages trace paths and step numbering.
+
+Note: This is a standalone POC script. In Claude Code, use the microloop skill
+with hooks instead of running this script directly.
 """
 
 from __future__ import annotations
@@ -30,7 +33,7 @@ def run(cmd: list[str]) -> int:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--session", default="", help="session id (optional)")
-    ap.add_argument("--out-root", default=os.path.join("dev_driver", "trace"), help="trace root dir")
+    ap.add_argument("--out-root", default=os.path.join(".claude", "claude-microloop", "traces"), help="trace root dir")
     ap.add_argument("--x", type=int, required=True, help="screen x (0..1919)")
     ap.add_argument("--y", type=int, required=True, help="screen y (0..1079)")
     args = ap.parse_args()
@@ -40,7 +43,7 @@ def main() -> int:
     os.makedirs(out_dir, exist_ok=True)
 
     py = sys.executable
-    driver = os.path.join("dev_driver", "dev_driver.py")
+    driver = os.path.join(".claude", "claude-microloop", "driver", "dev_driver.py")
 
     rc = run([py, driver, "observe", "--out", os.path.join(out_dir, _step_name(1))])
     if rc != 0:

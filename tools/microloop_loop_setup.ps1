@@ -3,7 +3,7 @@ param(
     [string[]]$Prompt,
     [int]$MaxIterations = 0,
     [string]$CompletionPromise = "",
-    [string]$StatePath = ".codex\\microloop-loop.local.md"
+    [string]$StatePath = ".claude\\microloop-loop.local.md"
 )
 
 $ErrorActionPreference = "Stop"
