@@ -16,12 +16,12 @@ hooks:
     - matcher: "Bash"
       hooks:
         - type: command
-          command: "python .claude/claude-microloop/skills/microloop_loop/scripts/preflight_hook.py"
+          command: "python .claude/microloop/skills/microloop_loop/scripts/preflight_hook.py"
   PostToolUse:
     - matcher: "Bash"
       hooks:
         - type: command
-          command: "python .claude/claude-microloop/skills/microloop_loop/scripts/trace_hook.py"
+          command: "python .claude/microloop/skills/microloop_loop/scripts/trace_hook.py"
   Stop:
     - hooks:
         - type: prompt
@@ -74,7 +74,7 @@ hooks:
   "action": {"type": "click", "rel_x": 500, "rel_y": 500},
   "expect": "本步后应看到的变化",
   "evidence": {
-    "trace": ".claude/claude-microloop/trace/<session>/step-0001.png"
+    "trace": ".claude/microloop/trace/<session>/step-0001.png"
   }
 }
 ```
@@ -94,29 +94,29 @@ hooks:
 
 ### 预检与聚焦（每轮开始前）
 ```bash
-python .claude/claude-microloop/driver/dev_driver.py focus --title "<title>" --client-size 1280x720 --x 0 --y 0
-python .claude/claude-microloop/driver/dev_driver.py inspect --title "<title>" --strict --expect-foreground --expect-scale 100 --expect-client-size 1280x720
-python .claude/claude-microloop/driver/dev_driver.py observe --window-title "<title>" --mode client --activate --out "<trace>" --overlay --overlay-ms 600
+python .claude/microloop/driver/dev_driver.py focus --title "<title>" --client-size 1280x720 --x 0 --y 0
+python .claude/microloop/driver/dev_driver.py inspect --title "<title>" --strict --expect-foreground --expect-scale 100 --expect-client-size 1280x720
+python .claude/microloop/driver/dev_driver.py observe --window-title "<title>" --mode client --activate --out "<trace>" --overlay --overlay-ms 600
 ```
 
 ### 一键预检脚本
 ```bash
-powershell -NoProfile -ExecutionPolicy Bypass -File .claude/claude-microloop/tools/microloop_loop_preflight.ps1 -Title "<title>"
+powershell -NoProfile -ExecutionPolicy Bypass -File .claude/microloop/tools/microloop_loop_preflight.ps1 -Title "<title>"
 ```
 
 ### 点击
 ```bash
-python .claude/claude-microloop/driver/dev_driver.py click --window-title "<title>" --rel-x 500 --rel-y 500 --mode client --activate
+python .claude/microloop/driver/dev_driver.py click --window-title "<title>" --rel-x 500 --rel-y 500 --mode client --activate
 ```
 
 ### 输入
 ```bash
-python .claude/claude-microloop/driver/dev_driver.py type --text "hello" --window-title "<title>" --activate
+python .claude/microloop/driver/dev_driver.py type --text "hello" --window-title "<title>" --activate
 ```
 
 ### 截图对比（Diff）
 ```bash
-python .claude/claude-microloop/driver/dev_driver.py diff --a "<prev.png>" --b "<curr.png>" --out "<diff.png>" --threshold 20
+python .claude/microloop/driver/dev_driver.py diff --a "<prev.png>" --b "<curr.png>" --out "<diff.png>" --threshold 20
 ```
 
 ## 异常分层

@@ -2,6 +2,9 @@
 traces/
 *.jsonl
 
+# Claude temp files
+tmpclaude-*
+
 # Python
 __pycache__/
 *.py[cod]

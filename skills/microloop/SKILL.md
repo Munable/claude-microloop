@@ -16,12 +16,12 @@ hooks:
     - matcher: "Bash"
       hooks:
         - type: command
-          command: "python .claude/claude-microloop/skills/microloop/scripts/preflight_hook.py"
+          command: "python .claude/microloop/skills/microloop/scripts/preflight_hook.py"
   PostToolUse:
     - matcher: "Bash"
       hooks:
         - type: command
-          command: "python .claude/claude-microloop/skills/microloop/scripts/trace_hook.py"
+          command: "python .claude/microloop/skills/microloop/scripts/trace_hook.py"
 ---
 
 # 微循环（Microloop）
@@ -65,32 +65,32 @@ hooks:
 
 ### 截图（Observe）
 ```bash
-python .claude/claude-microloop/driver/dev_driver.py observe --out ".claude/claude-microloop/trace/<session>/step-XXXX.png" --window-title "<title>" --mode client --activate --overlay --overlay-ms 600
+python .claude/microloop/driver/dev_driver.py observe --out ".claude/microloop/trace/<session>/step-XXXX.png" --window-title "<title>" --mode client --activate --overlay --overlay-ms 600
 ```
 
 ### 点击（Act）
 ```bash
 # 窗口相对坐标（推荐）
-python .claude/claude-microloop/driver/dev_driver.py click --window-title "<title>" --rel-x 500 --rel-y 500 --mode client --activate
+python .claude/microloop/driver/dev_driver.py click --window-title "<title>" --rel-x 500 --rel-y 500 --mode client --activate
 
 # 屏幕绝对坐标（需要 --verify-window）
-python .claude/claude-microloop/driver/dev_driver.py click --x 640 --y 360 --window-title "<title>" --verify-window
+python .claude/microloop/driver/dev_driver.py click --x 640 --y 360 --window-title "<title>" --verify-window
 ```
 
 ### 输入文本
 ```bash
-python .claude/claude-microloop/driver/dev_driver.py type --text "hello" --window-title "<title>" --activate
+python .claude/microloop/driver/dev_driver.py type --text "hello" --window-title "<title>" --activate
 ```
 
 ### 预检与聚焦
 ```bash
-python .claude/claude-microloop/driver/dev_driver.py focus --title "<title>" --client-size 1280x720 --x 0 --y 0
-python .claude/claude-microloop/driver/dev_driver.py inspect --title "<title>" --strict --expect-foreground --expect-scale 100 --expect-client-size 1280x720
+python .claude/microloop/driver/dev_driver.py focus --title "<title>" --client-size 1280x720 --x 0 --y 0
+python .claude/microloop/driver/dev_driver.py inspect --title "<title>" --strict --expect-foreground --expect-scale 100 --expect-client-size 1280x720
 ```
 
 ### 一键预检脚本
 ```bash
-powershell -NoProfile -ExecutionPolicy Bypass -File .claude/claude-microloop/tools/microloop_loop_preflight.ps1 -Title "<title>"
+powershell -NoProfile -ExecutionPolicy Bypass -File .claude/microloop/tools/microloop_loop_preflight.ps1 -Title "<title>"
 ```
 
 ## 固定输出格式
@@ -118,7 +118,7 @@ Evidence: trace 路径（png 必须）
 ## Trace 证据
 - 每步必须产出 trace（截图 png）
 - 关键结论必须引用 trace
-- 位置：`.claude/claude-microloop/trace/<session>/step-XXXX.png`
+- 位置：`.claude/microloop/trace/<session>/step-XXXX.png`
 - 命名建议：
   - session：`YYYYMMDD-HHMMSS_<short-tag>`
   - step：`step-0001.png`、`step-0002.png`

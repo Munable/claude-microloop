@@ -39,20 +39,45 @@ claude-microloop/
 │   └── README.md
 ├── tools/
 │   └── microloop_loop_preflight.ps1  # 一键预检脚本
+├── install.ps1              # 安装脚本（创建符号链接）
 └── traces/                  # 截图和日志（自动创建）
 ```
 
 ## 安装
 
-1. 克隆此仓库到项目的 `.claude/claude-microloop` 目录：
+1. 克隆此仓库到项目的 `.claude/microloop` 目录：
    ```bash
-   git clone https://github.com/Munable/claude-microloop.git .claude/claude-microloop
+   git clone https://github.com/Munable/claude-microloop.git .claude/microloop
    ```
-2. 安装 Python 依赖：
+
+2. 运行安装脚本（创建符号链接，需要管理员权限）：
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .claude/microloop/install.ps1
+   ```
+
+   这会创建：
+   ```
+   .claude/skills/microloop      → .claude/microloop/skills/microloop
+   .claude/skills/microloop_loop → .claude/microloop/skills/microloop_loop
+   ```
+
+3. 安装 Python 依赖：
    ```bash
    pip install pywin32 Pillow
    ```
-3. Claude Code 会自动识别 `skills/` 目录中的 skill
+
+安装后的目录结构：
+```
+项目/
+└── .claude/
+    ├── skills/
+    │   ├── microloop/      → (链接) Claude Code 识别的位置
+    │   └── microloop_loop/ → (链接)
+    └── microloop/          ← 本仓库
+        ├── skills/
+        ├── driver/
+        └── tools/
+```
 
 ## 使用
 
@@ -88,7 +113,7 @@ Observe → Plan → Act → Observe
 
 ### 截图
 ```bash
-python .claude/claude-microloop/driver/dev_driver.py observe \
+python .claude/microloop/driver/dev_driver.py observe \
   --window-title "MyApp" \
   --mode client \
   --activate \
@@ -98,7 +123,7 @@ python .claude/claude-microloop/driver/dev_driver.py observe \
 
 ### 点击
 ```bash
-python .claude/claude-microloop/driver/dev_driver.py click \
+python .claude/microloop/driver/dev_driver.py click \
   --window-title "MyApp" \
   --rel-x 500 --rel-y 500 \
   --mode client \
@@ -107,7 +132,7 @@ python .claude/claude-microloop/driver/dev_driver.py click \
 
 ### 输入
 ```bash
-python .claude/claude-microloop/driver/dev_driver.py type \
+python .claude/microloop/driver/dev_driver.py type \
   --text "hello" \
   --window-title "MyApp" \
   --activate
@@ -116,7 +141,7 @@ python .claude/claude-microloop/driver/dev_driver.py type \
 ### 预检
 ```bash
 powershell -NoProfile -ExecutionPolicy Bypass \
-  -File .claude/claude-microloop/tools/microloop_loop_preflight.ps1 \
+  -File .claude/microloop/tools/microloop_loop_preflight.ps1 \
   -Title "MyApp"
 ```
 
