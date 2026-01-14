@@ -1,16 +1,6 @@
 ---
 name: microloop
-description: |
-  GUI 视觉验证工具。当 Claude 需要像人一样「真正看到屏幕画面」并「操作窗口」时使用。
-
-  自动触发场景：
-  - 用户说「看看界面」「截个图」「检查 UI」「验证显示效果」
-  - 开发 GUI 应用后需要验证实际渲染结果
-  - 调试 UI bug 需要看到真实画面
-  - 需要点击按钮、输入文本等窗口操作
-  - 需要截图作为证据
-
-  关键词：GUI、界面、UI、窗口、截图、看到、显示效果、点击、视觉验证
+description: GUI visual verification - screenshot and operate windows when needed
 hooks:
   PreToolUse:
     - matcher: "Bash"
