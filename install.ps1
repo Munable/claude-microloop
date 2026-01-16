@@ -34,7 +34,7 @@ if (!(Test-Path $skillsDir)) {
 }
 
 # Skills to link
-$skills = @("microloop", "microloop_loop")
+$skills = @("microloop")
 
 foreach ($skill in $skills) {
     $source = Join-Path $microloopDir "skills\$skill"

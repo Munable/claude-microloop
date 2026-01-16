@@ -14,10 +14,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# claude-microloop 根目录
+# microloop 根目录
 $microloopRoot = Split-Path -Parent $PSScriptRoot
 
-# 项目根目录 (claude-microloop 的上两级)
+# 项目根目录 (microloop 的上两级)
 $projectRoot = Split-Path -Parent (Split-Path -Parent $microloopRoot)
 Set-Location $projectRoot
 
@@ -33,7 +33,7 @@ if (!(Test-Path $driver)) {
 
 $sizeArg = "{0}x{1}" -f $WindowWidth, $WindowHeight
 $session = Get-Date -Format "yyyyMMdd-HHmmss"
-$outDir = Join-Path $microloopRoot ("trace\preflight_" + $session)
+$outDir = Join-Path $microloopRoot ("traces\preflight_" + $session)
 New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 $shot = Join-Path $outDir "step-0001.png"
 

@@ -14,21 +14,21 @@ GUI 验证和 UI 调试的微循环工具，专为 **Claude Code** 设计。
 利用 Claude Code 的 **Skill-Scoped Hooks** 特性：
 - **PreToolUse Hook**: 执行 dev_driver 命令前自动验证环境（分辨率、窗口状态）
 - **PostToolUse Hook**: 执行后自动记录 trace 日志
-- **Stop Hook**: 智能判断 GUI 任务是否完成（仅 loop 模式）
 
 Hooks 只在 skill 激活时生效，结束后自动清理。
+
+## 自动检测
+
+通过项目根目录的 `CLAUDE.md` 配置，Claude 会自动检测 GUI 相关任务并主动调用 microloop skill，无需手动输入 `/microloop`。
+
+检测关键词：「看看界面」「验证 UI」「截图」「GUI 测试」「界面效果」等。
 
 ## 目录结构
 
 ```
 claude-microloop/
 ├── skills/
-│   ├── microloop/           # 基础微循环 skill（单步模式）
-│   │   ├── SKILL.md
-│   │   └── scripts/
-│   │       ├── preflight_hook.py
-│   │       └── trace_hook.py
-│   └── microloop_loop/      # Loop 版微循环 skill（无人值守）
+│   └── microloop/           # 微循环 skill
 │       ├── SKILL.md
 │       └── scripts/
 │           ├── preflight_hook.py
@@ -81,9 +81,7 @@ claude-microloop/
 
 ## 使用
 
-### 基础模式（单步）
-
-当需要 GUI 验证时，Claude Code 会自动使用 `microloop` skill：
+当需要 GUI 验证时，Claude 会自动检测并使用 `microloop` skill：
 
 ```
 Observe → Plan → Act → Observe
@@ -91,21 +89,12 @@ Observe → Plan → Act → Observe
 
 每步只执行一个动作，便于调试和复盘。
 
-### Loop 模式（无人值守）
-
-用户明确要求 loop/ralph 时，使用 `microloop_loop` skill：
-
-- 与 `ralph-loop` 插件配合使用
-- 固定 prompt 反复执行直到完成
-- 输出 `<promise>DONE</promise>` 标记完成
-
 ## Skill-Scoped Hooks
 
 本仓库使用 Claude Code 的 skill-scoped hooks 特性：
 
 - **PreToolUse**: 执行命令前自动验证环境（分辨率、窗口状态）
 - **PostToolUse**: 执行后自动记录 trace 日志
-- **Stop**: 智能判断任务是否完成（仅 loop 模式）
 
 **重要**: hooks 只在 skill 激活时生效，结束后自动清理，不会影响其他会话。
 
@@ -118,7 +107,7 @@ python .claude/microloop/driver/dev_driver.py observe \
   --mode client \
   --activate \
   --overlay \
-  --out "trace/step-0001.png"
+  --out "traces/step-0001.png"
 ```
 
 ### 点击

@@ -35,12 +35,7 @@ hooks:
 - ❌ 运行命令行程序
 - ❌ 不涉及 GUI 的任务
 
-## 单步 vs Loop
-
-- **microloop（本 skill）**：每次一个动作，便于调试和观察
-- **microloop_loop**：配合 ralph-loop 插件，无人值守循环直到完成
-
-## 核心流程（严格单步）
+## 核心流程（单步循环）
 1) Observe：截图 + trace
 2) Plan：在 Claude Code 决定下一步
 3) Act：执行**单个动作**
@@ -55,7 +50,7 @@ hooks:
 
 ### 截图（Observe）
 ```bash
-python .claude/microloop/driver/dev_driver.py observe --out ".claude/microloop/trace/<session>/step-XXXX.png" --window-title "<title>" --mode client --activate --overlay --overlay-ms 600
+python .claude/microloop/driver/dev_driver.py observe --out ".claude/microloop/traces/<session>/step-XXXX.png" --window-title "<title>" --mode client --activate --overlay --overlay-ms 600
 ```
 
 ### 点击（Act）
@@ -108,7 +103,7 @@ Evidence: trace 路径（png 必须）
 ## Trace 证据
 - 每步必须产出 trace（截图 png）
 - 关键结论必须引用 trace
-- 位置：`.claude/microloop/trace/<session>/step-XXXX.png`
+- 位置：`.claude/microloop/traces/<session>/step-XXXX.png`
 - 命名建议：
   - session：`YYYYMMDD-HHMMSS_<short-tag>`
   - step：`step-0001.png`、`step-0002.png`

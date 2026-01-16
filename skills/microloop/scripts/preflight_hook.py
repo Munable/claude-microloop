@@ -25,13 +25,13 @@ def get_project_root() -> Path:
 
 def get_driver_path(project_root: Path) -> Path:
     """获取 dev_driver.py 路径"""
-    return project_root / ".claude" / "claude-microloop" / "driver" / "dev_driver.py"
+    return project_root / ".claude" / "microloop" / "driver" / "dev_driver.py"
 
 
 def is_dev_driver_command(command: str) -> bool:
-    """检查是否是 dev_driver 相关命令"""
-    keywords = ["dev_driver", "dev_driver.py", "claude-microloop"]
-    return any(kw in command.lower() for kw in keywords)
+    """检查是否是 dev_driver.py 命令（不匹配其他 microloop 脚本）"""
+    # 只匹配 dev_driver.py，不匹配 microloop_loop_*.ps1 等脚本
+    return "dev_driver.py" in command or "dev_driver " in command
 
 
 def run_preflight_check(project_root: Path) -> tuple[bool, str]:

@@ -22,9 +22,9 @@ def get_project_root() -> Path:
 
 
 def is_dev_driver_command(command: str) -> bool:
-    """检查是否是 dev_driver 相关命令"""
-    keywords = ["dev_driver", "dev_driver.py", "claude-microloop"]
-    return any(kw in command.lower() for kw in keywords)
+    """检查是否是 dev_driver.py 命令（不匹配其他 microloop 脚本）"""
+    # 只匹配 dev_driver.py，不匹配 microloop_loop_*.ps1 等脚本
+    return "dev_driver.py" in command or "dev_driver " in command
 
 
 def extract_action_type(command: str) -> str:
@@ -48,21 +48,34 @@ def extract_trace_path(command: str) -> str:
 
 def log_trace(project_root: Path, command: str, output: str, action_type: str) -> str:
     """记录 trace 到日志文件，返回日志路径"""
-    log_dir = project_root / ".claude" / "claude-microloop" / "traces"
+    log_dir = project_root / ".claude" / "microloop" / "traces"
     log_dir.mkdir(parents=True, exist_ok=True)
 
     date_str = datetime.now().strftime("%Y-%m-%d")
     log_file = log_dir / f"trace-{date_str}.jsonl"
 
     # 解析 dev_driver 输出
-    success = True
+    success = False
     trace_path = ""
+
+    # 尝试从输出中找到 JSON 部分（dev_driver 输出是 JSON 格式）
+    json_output = output.strip()
+
+    # 如果输出包含多行，尝试找到 JSON 行
+    if json_output:
+        for line in json_output.split('\n'):
+            line = line.strip()
+            if line.startswith('{') and line.endswith('}'):
+                json_output = line
+                break
+
     try:
-        result = json.loads(output)
+        result = json.loads(json_output)
         success = result.get("status") == "ok"
         trace_path = result.get("file", "")
-    except (json.JSONDecodeError, TypeError):
-        success = "error" not in output.lower() if output else True
+    except (json.JSONDecodeError, TypeError, ValueError):
+        # 无法解析 JSON，使用启发式判断
+        success = "error" not in output.lower() if output else False
         trace_path = extract_trace_path(command)
 
     entry = {
@@ -86,15 +99,23 @@ def main():
         sys.exit(0)
 
     tool_input = input_data.get("tool_input", {})
-    # PostToolUse 的输出在 tool_result 字段
-    tool_result = input_data.get("tool_result", {})
+    # PostToolUse 的输出在 tool_response 字段（不是 tool_result）
+    tool_response = input_data.get("tool_response", {})
     command = tool_input.get("command", "")
 
-    # tool_result 可能是字符串或对象
-    if isinstance(tool_result, str):
-        output = tool_result
+    # 提取实际输出：tool_response.stdout 是主要输出
+    if isinstance(tool_response, str):
+        output = tool_response.strip()
+    elif isinstance(tool_response, dict):
+        # Claude Code 使用 tool_response.stdout
+        output = (
+            tool_response.get("stdout", "") or
+            tool_response.get("content", "") or
+            tool_response.get("output", "") or
+            ""
+        ).strip()
     else:
-        output = tool_result.get("stdout", "") or tool_result.get("content", "") or str(tool_result)
+        output = str(tool_response).strip() if tool_response else ""
 
     # 非 dev_driver 命令直接跳过
     if not is_dev_driver_command(command):
